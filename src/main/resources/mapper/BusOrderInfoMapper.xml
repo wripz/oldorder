@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ekold.mapper.BusOrderInfoMapper">
+
+    <select id="findBusOrderList" resultType="com.ekold.requests.BusOrderInfo">
+        SELECT
+            a.ordercode as ordercode,
+            a.mall_orderid as mallOrderid,
+            b.orderid as orderid,
+            a.userid as userid,
+            a.mobile as mobile
+        FROM
+            bus_order_info a
+        LEFT JOIN order_info b ON a.mall_orderid = b.mall_orderid
+        WHERE
+            (
+                a.STATUS = 3
+                OR a.booktime >= str_to_date(#{param.timeRemark},'%Y-%m-%d %H:%i:%s')
+            )
+        <!-- 发放状态 -->
+        <if test="param.userid != null and '' != param.userid">
+            AND a.userid = #{param.userid}
+        </if>
+        ORDER BY
+            a.createtime DESC
+    </select>
+
+</mapper>

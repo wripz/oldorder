@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ekold.mapper.BusStationInfoMapper">
+
+    <select id="findBusStationList" resultType="com.ekold.requests.BusStationInfo">
+        SELECT
+        t.id AS id,
+        t.ORIGIN AS origin,
+        t.STATIONNAME AS stationName,
+        t.STATIONADDRESS AS stationAddress,
+        t.STATIONPHONE AS stationPhone
+        FROM
+        BUS_STATION_INFO t
+        WHERE
+        1 = 1
+        <!-- 起始站 -->
+        <if test="param.origin != null and '' != param.origin">
+            AND t.origin = #{param.origin}
+        </if>
+        <!-- 终点站 -->
+        <if test="param.stationName != null and '' != param.stationName">
+            AND t.stationName = #{param.stationName}
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ekold.mapper.UserInfoMapper">
+
+    <!-- 查询用户信息 -->
+    <select id="getUserInfo" resultType="com.ekold.requests.UserInfo">
+        SELECT
+            id AS id,
+            userid AS userId,
+            city AS city,
+            headerimage AS headerImage,
+            nickname AS nickName,
+            member_id AS memberId,
+            ostype AS osType,
+            version AS version,
+            who AS who
+        FROM
+            user_info t
+        WHERE
+            1 = 1
+        <!-- userId -->
+        <if test="param.userId != null and '' != param.userId">
+            AND t.userid = #{param.userId}
+        </if>
+
+        order by t.id desc
+
+        <if test="null != param.pageSize and null != param.startRow">
+            limit #{param.startRow},#{param.pageSize}
+        </if>
+    </select>
+
+    <!-- 查询用户信息 -->
+    <select id="getUserCount" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        user_info t
+        WHERE
+        1 = 1
+    </select>
+
+</mapper>

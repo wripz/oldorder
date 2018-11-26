@@ -1,0 +1,16 @@
+spring:
+  #数据源配置
+  datasource:
+    url: jdbc:mysql://rm-wz9ej032sy564wp3ato.mysql.rds.aliyuncs.com:3306/ek_old?useSSL=false
+    username: root
+    password: 790719@zx
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    connectionProperties: druid.stat.mergeSql=true
+
+server:
+  port: 8001
+
+logging:
+  level:
+    cn.vpclub.moses: debug

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+
+    <diskStore path="java.io.tmpdir/ehcache"/>
+
+    <!-- 设定缓存的默认数据过期策略 -->
+    <defaultCache
+            maxElementsInMemory="1000"
+            eternal="false"
+            overflowToDisk="true"
+            timeToIdleSeconds="10"
+            timeToLiveSeconds="20"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"/>
+
+    <cache name="orderInfo"
+           maxElementsInMemory="10000"
+           eternal="false"
+           overflowToDisk="true"
+           timeToIdleSeconds="1000"
+           timeToLiveSeconds="2000"
+           memoryStoreEvictionPolicy="LRU"/>
+
+</ehcache>

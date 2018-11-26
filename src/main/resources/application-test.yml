@@ -1,0 +1,13 @@
+spring:
+  #数据源配置
+  datasource:
+    url: jdbc:mysql://mysql-test/ek_old?useSSL=false
+    username: bait
+    password: '@baittest'
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    connectionProperties: druid.stat.mergeSql=true
+
+logging:
+  level:
+    cn.vpclub.moses: debug

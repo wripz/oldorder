@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ekold.mapper.OldBusOrderInfoMapper">
+
+    <!-- 批量新增 -->
+    <insert id="addList" parameterType="java.util.List">
+        INSERT INTO bus_order_info_old (
+        mall_orderid,
+        ordercode,
+        classCode,
+        stationCode,
+        amount,
+        tickets,
+        origin,
+        mobile,
+        bookTime,
+        className,
+        cardNo,
+        classTime,
+        password,
+        site,
+        price,
+        name,
+        stationName,
+        seatNo,
+        status,
+        userid
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.mallOrderid},
+            #{item.ordercode},
+            #{item.classCode},
+            #{item.stationCode},
+            #{item.amount},
+            #{item.tickets},
+            #{item.origin},
+            #{item.mobile},
+            #{item.bookTime},
+            #{item.className},
+            #{item.cardNo},
+            #{item.classTime},
+            #{item.password},
+            #{item.site},
+            #{item.price},
+            #{item.name},
+            #{item.stationName},
+            #{item.seatNo},
+            #{item.status},
+            #{item.userid}
+            )
+        </foreach>
+    </insert>
+
+
+    <select id="findBusOrderList" resultType="com.ekold.requests.BusOrderInfo">
+        SELECT
+        t.mall_orderid AS mallOrderid,
+        t.ordercode AS ordercode,
+        t.classCode AS classCode,
+        t.stationCode AS stationCode,
+        t.amount AS amount,
+        t.tickets AS tickets,
+        t.origin AS origin,
+        t.mobile AS mobile,
+        t.bookTime AS bookTimeStr,
+        t.className AS className,
+        t.cardNo AS cardNo,
+        t.classTime AS classTimeStr,
+        t.PASSWORD AS PASSWORD,
+        t.site AS site,
+        t.price AS price,
+        t.name AS name,
+        t.stationName AS stationName,
+        t.seatNo AS seatNo,
+        t.STATUS AS STATUS,
+        t.userid AS userid
+        FROM
+        bus_order_info_old t
+        WHERE
+        1 = 1
+        <!-- userid -->
+        <if test="param.userid != null">
+            AND t.userid = #{param.userid}
+        </if>
+        ORDER BY t.mall_orderid desc
+        <if test="null != param.pageSize and null != param.startRow">
+            limit #{param.startRow},#{param.pageSize}
+        </if>
+    </select>
+
+
+    <delete id="delete">
+        DELETE  from bus_order_info_old
+    </delete>
+
+    <delete id="deleteByMobile">
+        DELETE t from bus_order_info_old t WHERE t.mobile = #{param.mobile}
+    </delete>
+</mapper>

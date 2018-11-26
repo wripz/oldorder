@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ekold.mapper.BusInsuranceInfoMapper">
+
+    <!-- 批量新增 -->
+    <insert id="addList" parameterType="java.util.List">
+        INSERT INTO BUS_INSURANCE_INFO_old (
+        cardno,
+        mobile,
+        name,
+        ordercode,
+        price,
+        status,
+        policyno,
+        company,
+        termdate,
+        fromdate,
+        time
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.cardno},
+            #{item.mobile},
+            #{item.name},
+            #{item.ordercode},
+            #{item.price},
+            #{item.status},
+            #{item.policyno},
+            #{item.company},
+            #{item.termdate},
+            #{item.fromdate},
+            #{item.time}
+            )
+        </foreach>
+    </insert>
+
+    <select id="findBusInsuranceList" resultType="com.ekold.requests.BusInsuranceInfo">
+        SELECT
+        t.cardno AS cardno,
+        t.mobile AS mobile,
+        t.NAME AS NAME,
+        t.ordercode AS ordercode,
+        t.price AS price,
+        t.STATUS AS status,
+        t.policyno AS policyno,
+        t.company AS company,
+        t.termdate AS termdateStr,
+        t.fromdate AS fromdateStr,
+        t.time AS timeStr
+        FROM
+        bus_insurance_info_old t
+        WHERE
+        1 = 1
+        <!-- cardno -->
+        <if test="param.cardno != null and '' != param.cardno">
+            AND t.cardno = #{param.cardno}
+        </if>
+        <!-- ordercode -->
+        <if test="param.ordercode != null and '' != param.ordercode">
+            AND t.ordercode = #{param.ordercode}
+        </if>
+    </select>
+
+    <delete id="delete">
+        DELETE  from BUS_INSURANCE_INFO_old
+    </delete>
+
+    <delete id="deleteByMobile">
+        DELETE t from BUS_INSURANCE_INFO_old t WHERE t.mobile = #{param.mobile}
+    </delete>
+</mapper>

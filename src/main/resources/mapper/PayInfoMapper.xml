@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ekold.mapper.PayInfoMapper">
+
+    <!-- 批量新增 -->
+    <insert id="addList" parameterType="java.util.List">
+        INSERT INTO pay_info_old (
+        order_id,
+        amount,
+        currency
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.orderId,jdbcType=BIGINT},
+            #{item.amount},
+            #{item.currency}
+            )
+        </foreach>
+    </insert>
+
+
+    <select id="findPayInfoList" resultType="com.ekold.requests.PaymentInfos">
+        SELECT
+        t.order_id AS orderId,
+        t.amount AS amount,
+        t.currency AS currency,
+        if(t.currency='cash','现金','电子券') AS currencyDesc
+        FROM
+        pay_info_old t
+        WHERE
+        1 = 1
+        <!-- orderId -->
+        <if test="param.orderId != null">
+            AND t.order_id = #{param.orderId}
+        </if>
+    </select>
+
+
+    <delete id="delete">
+        DELETE  from pay_info_old
+    </delete>
+
+    <delete id="deleteByOrderId">
+        DELETE t from pay_info_old t WHERE t.order_id in (select id from order_info_old t2 where t2.userId = #{param.memberId})
+    </delete>
+</mapper>

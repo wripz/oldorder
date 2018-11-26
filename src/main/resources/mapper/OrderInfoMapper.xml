@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ekold.mapper.OrderInfoMapper">
+
+    <!-- 批量新增 -->
+    <insert id="addList" parameterType="java.util.List">
+        INSERT INTO order_info_old (
+        id,
+        <!--  -->
+        createTime,
+        goodsType,
+        invoiceContent,
+        invoiceSubject,
+        invoiceType,
+        orderStatus,
+        orderType,
+        payDescription,
+        payOnDelivery,
+        payStatus,
+        payTime,
+        remark,
+        shopId,
+        shopSubject,
+        subject,
+        userId,
+        totalPayAmount,
+        counts,
+        goodsId,
+        goodsSubject,
+        goodsVersion,
+        payPrice
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=BIGINT},
+            <!--  -->
+            #{item.createTimeDate},
+            #{item.goodsType},
+            #{item.invoiceContent},
+            #{item.invoiceSubject},
+            #{item.invoiceType},
+            #{item.orderStatus},
+            #{item.orderType},
+            #{item.payDescription},
+            #{item.payOnDelivery},
+            #{item.payStatus},
+            #{item.payTimeDate},
+            #{item.remark},
+            #{item.shopId},
+            #{item.shopSubject},
+            #{item.subject},
+            #{item.userId},
+            #{item.totalPayAmount},
+
+
+            <foreach item="goodsItem" index="index" collection="item.goodsInfos">
+                #{goodsItem.count},
+            </foreach>
+            <foreach item="goodsItem" index="index" collection="item.goodsInfos">
+                #{goodsItem.goodsId},
+            </foreach>
+            <foreach item="goodsItem" index="index" collection="item.goodsInfos">
+                #{goodsItem.goodsSubject},
+            </foreach>
+            <foreach item="goodsItem" index="index" collection="item.goodsInfos">
+                #{goodsItem.goodsVersion},
+            </foreach>
+            <foreach item="goodsItem" index="index" collection="item.goodsInfos">
+                #{goodsItem.payPrice}
+            </foreach>
+            )
+        </foreach>
+    </insert>
+
+    <select id="findOrderList" resultType="com.ekold.requests.OrderInfo">
+        SELECT
+        t.id AS id,
+        t.createTime AS createTime,
+        DATE_FORMAT(t.createTime,'%Y-%m-%d') AS createTimeDate,
+        t.goodsType AS goodsType,
+        t.invoiceContent AS invoiceContent,
+        t.invoiceSubject AS invoiceSubject,
+        t.invoiceType AS invoiceType,
+        t.orderStatus AS orderStatus,
+        t.orderType AS orderType,
+        t.payDescription AS payDescription,
+        t.payOnDelivery AS payOnDelivery,
+        t.payStatus AS payStatus,
+        t.payTime AS payTime,
+        DATE_FORMAT(t.payTime,'%Y-%m-%d') AS payTimeDate,
+        t.remark AS remark,
+        t.shopId AS shopId,
+        t.shopSubject AS shopSubject,
+        t.SUBJECT AS SUBJECT,
+        t.userId AS userId,
+        t.totalPayAmount AS totalPayAmount,
+        t.counts AS counts,
+        t.goodsId AS goodsId,
+        t.goodsSubject AS goodsSubject,
+        t.goodsVersion AS goodsVersion,
+        t.payPrice as payPrice,
+        t3.orderid as orderId
+        FROM
+        order_info_old t
+        LEFT JOIN user_info t2 ON t.userId = t2.member_id
+        LEFT JOIN order_info t3 on t.id = t3.mall_orderid
+        WHERE
+        1 = 1
+        <!-- userId -->
+        <if test="param.userId != null">
+            AND t2.userId = #{param.userId}
+        </if>
+        <!-- id -->
+        <if test="param.id != null">
+            AND t.id = #{param.id}
+        </if>
+        ORDER BY t.id desc
+
+        <if test="null != param.pageSize and null != param.startRow">
+            limit #{param.startRow},#{param.pageSize}
+        </if>
+    </select>
+
+    <delete id="delete">
+        DELETE  from order_info_old
+    </delete>
+
+    <delete id="deleteByUserId">
+        DELETE t from order_info_old t WHERE t.userId = #{param.memberId}
+    </delete>
+</mapper>
